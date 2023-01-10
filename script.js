@@ -116,14 +116,9 @@ function grab5day(weather) {
 
 Initialize function
 - get stored cities from local storage
-- default city or use current location?
-- default units of measurement (imperial)
+- default city or use current location? => what happens when nothing is loaded
 
 Function to save cities to local storage
-
-Error handling for API requests
-
-
 
 Add data to DOM
 - function to create today card
@@ -137,8 +132,12 @@ Function to store previous cities
 
 Input validation for search function
 
+Error handling for API requests
+
+
 
 Nice to haves:
+
 
 Converting units
 - temp k => f or c
