@@ -1,6 +1,18 @@
 const APIkey = '2226bf37a7ad24ff66689b2b133a3dc1';
 let units = 'imperial';
 
+// Query selectors
+const city = document.querySelector('#city');
+const todayDate = document.querySelector('#todayDate');
+const todayTemp = document.querySelector('#todayTemp');
+const todayDesc = document.querySelector('#todayDesc');
+const todayIcon = document.querySelector('#todayIcon');
+const todayWind = document.querySelector('#todayWind');
+const todayHumidty = document.querySelector('#todayHumidity');
+const cards = document.querySelector('#cards');
+
+
+
 init();
 
 function init() {
@@ -12,9 +24,10 @@ async function getWeather(city) {
   let cityGeo = await getGeo(city);
   let weather = await callWeather(cityGeo);
   let current = grabCurrent(weather);
-  console.log(current); ////////////////////////
+  updateCurrentDOM(current);
   let fiveDay = grab5day(weather);
   console.log(fiveDay); ////////////////////////
+  // create5dayCards(fiveDay);
 }
 
 // Get coordinates of city from Geo API
@@ -48,7 +61,8 @@ function grabCurrent(weather) {
   let cityName = weather.currentWeather.name;
   let currentDesc = weather.currentWeather.weather[0].description;
   let date = new Date();
-  date = date.toDateString(); // Format with Dayjs
+  date = date.toDateString();
+  date = dayjs(date).format('dddd, MMMM D, YYYY');
   let temp = Math.round(weather.currentWeather.main.temp);
   let windSpeed = Math.round(weather.currentWeather.wind.speed);
   let humidity = Math.round(weather.currentWeather.main.humidity);
@@ -112,6 +126,48 @@ function grab5day(weather) {
   return fiveDaySummary
 }
 
+function updateCurrentDOM(current) {
+  city.textContent = `Weather in ${current.cityName}`;
+  todayDate.textContent = current.date;
+  todayTemp.textContent = `${current.temp} &#8457`;
+  todayDesc.textContent = current.currentDesc;
+  todayWind.textContent = `Wind Speed: ${current.windSpeed} MPH`;
+  todayHumidty.textContent = `Humidity: ${current.humidity}%`;
+    // todayIcon /////////// Choose icon based on description
+}
+
+function create5dayCards(forecast) {
+  for (let i = 0; i < 5; i++) {
+    let card = document.createElement('div');
+    card.className = 'card col-md mx-2';
+    let cardBody = document.createElement('div');
+    cardBody.className = 'card-body';
+    let h3 = document.createElement('h3');
+    h3.className = 'card-title';
+    h3.textContent = 'h3'; ///////////
+    cardBody.appendChild(h3);
+    let h4 = document.createElement('h4');
+    h4.className = 'card-subtitle';
+    h4.textContent = 'h4'; ///////////
+    cardBody.appendChild(h4);
+    let img = document.createElement('img');
+    img.className = 'card-img';
+    // img.src = ''
+    cardBody.appendChild(img);
+    let p1 = document.createElement('p');
+    // p1.textContent =
+    cardBody.appendChild(p1);
+    let p2 = document.createElement('p');
+    // p2.textContent =
+    cardBody.appendChild(p2);
+    let p3 = document.createElement('p');
+    // p3.textContent =
+    cardBody.appendChild(p3);
+    card.appendChild(cardBody);
+    cards.appendChild(card);
+  }
+}
+
 /*
 
 Initialize function
@@ -129,6 +185,8 @@ Function to search for new city
 Function to store previous cities
 - No duplicates in list
 - Max length of list: 10?
+
+
 
 Input validation for search function
 

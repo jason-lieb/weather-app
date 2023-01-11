@@ -13,7 +13,7 @@
 <body class="bg-light">
   <header class="bg-primary p-3">
     <div class="container-md container-fluid">
-      <h1>Weather in Atlanta</h1>
+      <h1 id="city"></h1>
     </div>
   </header>
 
@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-12 col-md-3 mt-3">
         <div class="container">
-          <h2>Search for a City</h2>
+          <h2 class="my-3">Search for a City</h2>
           <input type="text" placeholder="e.g. Atlanta" class="form-control mb-4">
           <div class="d-grid gap-2">
             <input type="button" value="Search" class="btn btn-primary">
@@ -38,26 +38,28 @@
           <div class="container-fluid my-4">
             <div class="row bg-secondary rounded-4">
               <div class="col-sm-4 text-center my-auto">
-                <h2 id="today">Today</h2>
-                <h4 id="todayDate">Tuesday, January 10, 2023</h4>
+                <h2>Today</h2>
+                <h4 id="todayDate"></h4>
               </div>
               <div class="col-sm-2">
                 <img class="container-fluid" id="todayIcon" src="./icons/cloudy-day.svg" alt="Cloudy day">
               </div>
               <div class="col-sm-3 text-center my-auto">
-                <h2 id="todayTemp">60&#8457</h2>
-                <h4 id="todayDesc">Partly Cloudy</h4>
+                <h2 id="todayTemp"></h2>
+                <h4 id="todayDesc"></h4>
               </div>
               <div class="col-sm-3 text-center my-auto">
-                <h4 id="todayWind">Wind: 5mph</h4>
-                <h4 id="todayHumidity">Humidity: 40%</h4>
+                <h4 id="todayWind"></h4>
+                <h4 id="todayHumidity"></h4>
               </div>
             </div>
           </div>
 
-
-          <h2>5-Day Forecast</h2>
+          <div class="container">
+            <h2>5-Day Forecast</h2>
+          </div>
           <div id="cards" class="row gx-2 mt-4">
+
             <div class="card col-md mx-2">
               <div class="card-body">
                 <h3 class="card-title">Wednesday</h3>
@@ -68,6 +70,7 @@
                 <p>Humidity: 63 %</p>
               </div>
             </div>
+
             <div class="card col-md mx-2">a</div>
             <div class="card col-md mx-2">a</div>
             <div class="card col-md mx-2">a</div>
