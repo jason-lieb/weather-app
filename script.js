@@ -2,6 +2,8 @@ const APIkey = '2226bf37a7ad24ff66689b2b133a3dc1';
 let units = 'imperial';
 
 // Query selectors
+const search = document.querySelector('#search');
+const searchBtn = document.querySelector('#searchBtn');
 const city = document.querySelector('#city');
 const todayDate = document.querySelector('#todayDate');
 const todayTemp = document.querySelector('#todayTemp');
@@ -11,6 +13,9 @@ const todayWind = document.querySelector('#todayWind');
 const todayHumidty = document.querySelector('#todayHumidity');
 const cards = document.querySelector('#cards');
 
+// Event Listeners
+searchBtn.addEventListener('click', getWeather);
+
 init();
 
 function init() {
@@ -19,6 +24,7 @@ function init() {
 
 // Function to make API calls and parse responses for end data
 async function getWeather(city) {
+  city = typeof city === 'object' ? search.value : city;
   let cityGeo = await getGeo(city);
   let weather = await callWeather(cityGeo);
   let current = grabCurrent(weather);
@@ -131,6 +137,7 @@ function updateCurrentDOM(current) {
 }
 
 function create5dayCards(forecast) {
+  clear5dayCards();
   let today = dayjs(new Date());
   for (let i = 0; i < 5; i++) {
     let card = document.createElement('div');
@@ -149,11 +156,17 @@ function create5dayCards(forecast) {
   }
 }
 
+function clear5dayCards() {
+  cards.innerHTML = '';
+}
+
 function chooseWeatherIcon(description) { ////////////////////////////////
   return './icons/rainy.svg'
 }
 
 /*
+
+Clear 5 day forecast
 
 Initialize function
 - get stored cities from local storage
