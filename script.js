@@ -11,8 +11,6 @@ const todayWind = document.querySelector('#todayWind');
 const todayHumidty = document.querySelector('#todayHumidity');
 const cards = document.querySelector('#cards');
 
-
-
 init();
 
 function init() {
@@ -26,8 +24,7 @@ async function getWeather(city) {
   let current = grabCurrent(weather);
   updateCurrentDOM(current);
   let fiveDay = grab5day(weather);
-  console.log(fiveDay); ////////////////////////
-  // create5dayCards(fiveDay);
+  create5dayCards(fiveDay);
 }
 
 // Get coordinates of city from Geo API
@@ -80,12 +77,11 @@ function grab5day(weather) {
     let date = new Date(weather.fiveDay.list[i].dt * 1000);
     // Only use data from days that are not today
     if (today.getDate() !== date.getDate()) {
-      let tempMin = weather.fiveDay.list[i].main.temp_min;
-      let tempMax = weather.fiveDay.list[i].main.temp_max;
+      let temp = weather.fiveDay.list[i].main.temp;
       let humidity = weather.fiveDay.list[i].main.humidity;
       let windSpeed = weather.fiveDay.list[i].wind.speed;
       let description = weather.fiveDay.list[i].weather[0].description
-      let data = { tempMin, tempMax, humidity, windSpeed, description }
+      let data = { date, temp, humidity, windSpeed, description }
       if (!fiveDay[date.getDate()]) {
         fiveDay[date.getDate()] = [];
         fiveDayKeys.push(date.getDate());
@@ -97,13 +93,12 @@ function grab5day(weather) {
   let fiveDaySummary = [];
   for(let i = 0; i < 5; i++) {
     // Calculate daily average
-    let tempMin = fiveDay[fiveDayKeys[i]].reduce((avg, data) => avg += data.tempMin / fiveDay[fiveDayKeys[i]].length, 0);
-    let tempMax = fiveDay[fiveDayKeys[i]].reduce((avg, data) => avg += data.tempMax / fiveDay[fiveDayKeys[i]].length, 0);
+    let temp = fiveDay[fiveDayKeys[i]].reduce((avg, data) => avg += data.temp / fiveDay[fiveDayKeys[i]].length, 0);
     let humidity = fiveDay[fiveDayKeys[i]].reduce((avg, data) => avg += data.humidity / fiveDay[fiveDayKeys[i]].length, 0);
     let windSpeed = fiveDay[fiveDayKeys[i]].reduce((avg, data) => avg += data.windSpeed / fiveDay[fiveDayKeys[i]].length, 0);
+    let date = fiveDay[fiveDayKeys[i]][0].date;
     // Round to whole numbers
-    tempMin = Math.round(tempMin);
-    tempMax = Math.round(tempMax);
+    temp = Math.round(temp);
     humidity = Math.round(humidity);
     windSpeed = Math.round(windSpeed);
     // Find description to sum up whole day
@@ -120,8 +115,7 @@ function grab5day(weather) {
         description = key;
       }
     }
-
-    fiveDaySummary.push({ tempMin, tempMax, humidity, windSpeed, description })
+    fiveDaySummary.push({ date, temp, humidity, windSpeed, description })
   }
   return fiveDaySummary
 }
@@ -129,7 +123,7 @@ function grab5day(weather) {
 function updateCurrentDOM(current) {
   city.textContent = `Weather in ${current.cityName}`;
   todayDate.textContent = current.date;
-  todayTemp.textContent = `${current.temp} &#8457`;
+  todayTemp.innerHTML = `${current.temp}&#8457`;
   todayDesc.textContent = current.currentDesc;
   todayWind.textContent = `Wind Speed: ${current.windSpeed} MPH`;
   todayHumidty.textContent = `Humidity: ${current.humidity}%`;
@@ -137,35 +131,26 @@ function updateCurrentDOM(current) {
 }
 
 function create5dayCards(forecast) {
+  let today = dayjs(new Date());
   for (let i = 0; i < 5; i++) {
     let card = document.createElement('div');
+    card.innerHTML = `
+      <div class="card-body">
+        <h3 class="card-title">${dayjs(forecast[i].date).format('dddd')}</h3>
+        <h4 class="card-subtitle">${dayjs(forecast[i].date).format('MMM D, YYYY')}</h4>
+        <img class="card-img" src="${chooseWeatherIcon(forecast[i].description)}" alt="${forecast[i].description}">
+        <p>Temp: ${forecast[i].temp}&#8457</p>
+        <p>Wind: ${forecast[i].windSpeed} MPH</p>
+        <p>Humidity: ${forecast[i].humidity}%</p>
+      </div>
+      `
     card.className = 'card col-md mx-2';
-    let cardBody = document.createElement('div');
-    cardBody.className = 'card-body';
-    let h3 = document.createElement('h3');
-    h3.className = 'card-title';
-    h3.textContent = 'h3'; ///////////
-    cardBody.appendChild(h3);
-    let h4 = document.createElement('h4');
-    h4.className = 'card-subtitle';
-    h4.textContent = 'h4'; ///////////
-    cardBody.appendChild(h4);
-    let img = document.createElement('img');
-    img.className = 'card-img';
-    // img.src = ''
-    cardBody.appendChild(img);
-    let p1 = document.createElement('p');
-    // p1.textContent =
-    cardBody.appendChild(p1);
-    let p2 = document.createElement('p');
-    // p2.textContent =
-    cardBody.appendChild(p2);
-    let p3 = document.createElement('p');
-    // p3.textContent =
-    cardBody.appendChild(p3);
-    card.appendChild(cardBody);
     cards.appendChild(card);
   }
+}
+
+function chooseWeatherIcon(description) { ////////////////////////////////
+  return './icons/rainy.svg'
 }
 
 /*
@@ -175,10 +160,6 @@ Initialize function
 - default city or use current location? => what happens when nothing is loaded
 
 Function to save cities to local storage
-
-Add data to DOM
-- function to create today card
-- function to create cards for next 5 days
 
 Function to search for new city
 
