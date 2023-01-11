@@ -1,9 +1,11 @@
 const APIkey = '2226bf37a7ad24ff66689b2b133a3dc1';
 let units = 'imperial';
+let history;
 
 // Query selectors
 const search = document.querySelector('#search');
 const searchBtn = document.querySelector('#searchBtn');
+const historyBtns = document.querySelector('#history');
 const city = document.querySelector('#city');
 const todayDate = document.querySelector('#todayDate');
 const todayTemp = document.querySelector('#todayTemp');
@@ -19,18 +21,25 @@ searchBtn.addEventListener('click', getWeather);
 init();
 
 function init() {
-  getWeather('Atlanta');
+  loadHistory();
+  if (history === undefined || history === null) {
+    getWeather('Atlanta');
+  } else {
+    getWeather(history[0]);
+  }
 }
 
 // Function to make API calls and parse responses for end data
 async function getWeather(city) {
   city = typeof city === 'object' ? search.value : city;
+  search.value = '';
   let cityGeo = await getGeo(city);
   let weather = await callWeather(cityGeo);
   let current = grabCurrent(weather);
   updateCurrentDOM(current);
   let fiveDay = grab5day(weather);
   create5dayCards(fiveDay);
+  addNewCityToHistory(city);
 }
 
 // Get coordinates of city from Geo API
@@ -162,7 +171,6 @@ function clear5dayCards() {
 }
 
 function chooseWeatherIcon(description) {
-  console.log(description);
   let output;
   switch (description) {
     case 'Thunderstorm':
@@ -183,7 +191,40 @@ function chooseWeatherIcon(description) {
   return output
 }
 
+function addNewCityToHistory(city) {
+  if (history === null || history === undefined) history = [];
+  // See if city is already in history
+  if (history.length > 9) history.pop();
+  history.unshift(city);
+  localStorage.setItem('history', JSON.stringify(history));
+  updateHistoryDOM(city);
+}
+
+function updateHistoryDOM(city) {
+  let newCity = document.createElement('button');
+  newCity.className = 'btn btn-secondary';
+  newCity.textContent = city;
+  historyBtns.prepend(newCity);
+}
+
+///////// Remove buttons from DOM
+
+function loadHistory() {
+  history = JSON.parse(localStorage.getItem('history'));
+  if (history) {
+    for (let i = history.length - 1; i >= 0; i--) {
+      updateHistoryDOM(history[i]);
+    }
+  }
+}
+
+function clearHistory() {
+  localStorage.removeItem('history');
+}
+
 /*
+
+Add Functionality to Search by Clicking History Buttons
 
 Initialize function
 - get stored cities from local storage
@@ -191,7 +232,6 @@ Initialize function
 
 Function to save cities to local storage
 - No duplicates in list
-- Max length of list: 10?
 
 Better Font / Colors
 Responsive Design
@@ -210,5 +250,9 @@ Converting units
 - wind speed (default m/s, imperial gives mph)
 Degrees Celsius &#8451
 Degrees Farenheit &#8457
+
+Add searching by hitting enter when done typing input
+
+Add loading symbol before data is retrieved
 
 */
