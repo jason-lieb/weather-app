@@ -62,7 +62,7 @@ async function callWeather(coord) {
 function grabCurrent(weather) {
   let current = {};
   let cityName = weather.currentWeather.name;
-  let currentDesc = weather.currentWeather.weather[0].description;
+  let currentDesc = weather.currentWeather.weather[0].main;
   let date = new Date();
   date = date.toDateString();
   date = dayjs(date).format('dddd, MMMM D, YYYY');
@@ -86,7 +86,7 @@ function grab5day(weather) {
       let temp = weather.fiveDay.list[i].main.temp;
       let humidity = weather.fiveDay.list[i].main.humidity;
       let windSpeed = weather.fiveDay.list[i].wind.speed;
-      let description = weather.fiveDay.list[i].weather[0].description
+      let description = weather.fiveDay.list[i].weather[0].main;
       let data = { date, temp, humidity, windSpeed, description }
       if (!fiveDay[date.getDate()]) {
         fiveDay[date.getDate()] = [];
@@ -133,7 +133,8 @@ function updateCurrentDOM(current) {
   todayDesc.textContent = current.currentDesc;
   todayWind.textContent = `Wind Speed: ${current.windSpeed} MPH`;
   todayHumidty.textContent = `Humidity: ${current.humidity}%`;
-    // todayIcon /////////// Choose icon based on description
+  todayIcon.src = chooseWeatherIcon(current.currentDesc);
+  todayIcon.alt = current.currentDesc;
 }
 
 function create5dayCards(forecast) {
@@ -160,40 +161,54 @@ function clear5dayCards() {
   cards.innerHTML = '';
 }
 
-function chooseWeatherIcon(description) { ////////////////////////////////
-  return './icons/rainy.svg'
+function chooseWeatherIcon(description) {
+  console.log(description);
+  let output;
+  switch (description) {
+    case 'Thunderstorm':
+      output = './icons/thunder.svg';
+      break;
+    case 'Clear':
+      output = './icons/clear.svg';
+      break;
+    case 'Drizzle' || 'Rain':
+      output = './icons/rainy.svg';
+      break;
+    case 'Snow':
+      output = './icons/snowy.svg';
+      break;
+    default:
+      output = './icons/cloudy.svg';
+    }
+  return output
 }
 
 /*
 
-Clear 5 day forecast
-
 Initialize function
 - get stored cities from local storage
-- default city or use current location? => what happens when nothing is loaded
+- default city -> Atlanta or last city from local storage
 
 Function to save cities to local storage
-
-Function to search for new city
-
-Function to store previous cities
 - No duplicates in list
 - Max length of list: 10?
 
-
+Better Font / Colors
+Responsive Design
 
 Input validation for search function
-
 Error handling for API requests
 
-Degrees Celsius &#8451
-Degrees Farenheit &#8457
+
 
 Nice to haves:
 
+Use Current Location
 
 Converting units
 - temp k => f or c
 - wind speed (default m/s, imperial gives mph)
+Degrees Celsius &#8451
+Degrees Farenheit &#8457
 
 */
