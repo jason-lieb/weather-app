@@ -134,7 +134,8 @@ Input validation for search function
 
 Error handling for API requests
 
-
+Degrees Celsius &#8451
+Degrees Farenheit &#8457
 
 Nice to haves:
 
