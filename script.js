@@ -238,13 +238,3 @@ function clearHistory() {
 function getCityFromHistory(e) {
   getWeather(e.target.textContent)
 }
-
-
-/*
-
-Nice to haves:
-
-
-
-
-*/
