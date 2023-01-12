@@ -193,7 +193,12 @@ function chooseWeatherIcon(description) {
 
 function addNewCityToHistory(city) {
   if (history === null || history === undefined) history = [];
-  // See if city is already in history
+  for (let i = 0; i < history.length; i++) {
+    if (history[i] === city) {
+      history.splice(i, 1);
+      historyBtns.removeChild(document.querySelector(`#${cityToDashes(city)}`));
+    }
+  }
   if (history.length > 9) history.pop();
   history.unshift(city);
   localStorage.setItem('history', JSON.stringify(history));
@@ -203,11 +208,17 @@ function addNewCityToHistory(city) {
 function updateHistoryDOM(city) {
   let newCity = document.createElement('button');
   newCity.className = 'btn btn-secondary';
+  newCity.id = cityToDashes(city);
   newCity.textContent = city;
   historyBtns.prepend(newCity);
 }
 
+function cityToDashes(city) {
+  return city.split(' ').join('-');
+}
+
 ///////// Remove buttons from DOM
+///////// Add ids to buttons with city names
 
 function loadHistory() {
   history = JSON.parse(localStorage.getItem('history'));
