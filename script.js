@@ -239,31 +239,12 @@ function getCityFromHistory(e) {
   getWeather(e.target.textContent)
 }
 
-// Add Functionality to Search by Clicking History Buttons
-
 
 /*
 
 Nice to haves:
 
-Better Font / Colors
-Responsive Design
 
-Input validation for search function
-Error handling for API requests
 
-Use Current Location
-
-Converting units
-- temp k => f or c
-- wind speed (default m/s, imperial gives mph)
-Degrees Celsius &#8451
-Degrees Farenheit &#8457
-
-Add searching by hitting enter when done typing input
-
-Add loading symbol before data is retrieved
-
-Improve initial load time
 
 */
