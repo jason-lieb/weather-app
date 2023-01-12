@@ -17,6 +17,7 @@ const cards = document.querySelector('#cards');
 
 // Event Listeners
 searchBtn.addEventListener('click', getWeather);
+historyBtns.addEventListener('click', getCityFromHistory);
 
 init();
 
@@ -234,6 +235,9 @@ function clearHistory() {
   localStorage.removeItem('history');
 }
 
+function getCityFromHistory(e) {
+  getWeather(e.target.textContent)
+}
 
 // Add Functionality to Search by Clicking History Buttons
 
