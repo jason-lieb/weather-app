@@ -1,6 +1,6 @@
 const APIkey = '2226bf37a7ad24ff66689b2b133a3dc1';
 let units = 'imperial';
-let history;
+let history = [];
 
 // Query selectors
 const search = document.querySelector('#search');
@@ -22,7 +22,7 @@ init();
 
 function init() {
   loadHistory();
-  if (history === undefined || history === null) {
+  if (history.length === 0) {
     getWeather('Atlanta');
   } else {
     getWeather(history[0]);
@@ -194,7 +194,7 @@ function chooseWeatherIcon(description) {
 
 // Handles all conditions that need to be considered when adding a new city to history
 function addNewCityToHistory(city) {
-  if (history === null || history === undefined) history = [];
+  // if (history === null || history === undefined) history = [];
   // Check if city is already in history
   for (let i = 0; i < history.length; i++) {
     if (history[i] === city) {
@@ -226,10 +226,11 @@ function cityToDashes(city) {
 
 function loadHistory() {
   history = JSON.parse(localStorage.getItem('history'));
-  if (history) {
-    for (let i = history.length - 1; i >= 0; i--) {
-      updateHistoryDOM(history[i]);
-    }
+  // if (history) {
+
+  // }
+  for (let i = history.length - 1; i >= 0; i--) {
+    updateHistoryDOM(history[i]);
   }
 }
 
@@ -262,5 +263,7 @@ Degrees Farenheit &#8457
 Add searching by hitting enter when done typing input
 
 Add loading symbol before data is retrieved
+
+Improve initial load time
 
 */
