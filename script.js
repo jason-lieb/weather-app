@@ -135,6 +135,7 @@ function grab5day(weather) {
   return fiveDaySummary
 }
 
+// Update values in today section of forecast
 function updateCurrentDOM(current) {
   city.textContent = `Weather in ${current.cityName}`;
   todayDate.textContent = current.date;
@@ -191,20 +192,25 @@ function chooseWeatherIcon(description) {
   return output
 }
 
+// Handles all conditions that need to be considered when adding a new city to history
 function addNewCityToHistory(city) {
   if (history === null || history === undefined) history = [];
+  // Check if city is already in history
   for (let i = 0; i < history.length; i++) {
     if (history[i] === city) {
       history.splice(i, 1);
       historyBtns.removeChild(document.querySelector(`#${cityToDashes(city)}`));
     }
   }
+  // Limit history to 10 cities
   if (history.length > 9) history.pop();
+  // Add new city and update local storage and DOM
   history.unshift(city);
   localStorage.setItem('history', JSON.stringify(history));
   updateHistoryDOM(city);
 }
 
+// Add cities to history list
 function updateHistoryDOM(city) {
   let newCity = document.createElement('button');
   newCity.className = 'btn btn-secondary';
@@ -213,12 +219,10 @@ function updateHistoryDOM(city) {
   historyBtns.prepend(newCity);
 }
 
+// Function to replace spaces with dashes in city names for query selectors
 function cityToDashes(city) {
   return city.split(' ').join('-');
 }
-
-///////// Remove buttons from DOM
-///////// Add ids to buttons with city names
 
 function loadHistory() {
   history = JSON.parse(localStorage.getItem('history'));
@@ -233,26 +237,19 @@ function clearHistory() {
   localStorage.removeItem('history');
 }
 
+
+// Add Functionality to Search by Clicking History Buttons
+
+
 /*
 
-Add Functionality to Search by Clicking History Buttons
-
-Initialize function
-- get stored cities from local storage
-- default city -> Atlanta or last city from local storage
-
-Function to save cities to local storage
-- No duplicates in list
+Nice to haves:
 
 Better Font / Colors
 Responsive Design
 
 Input validation for search function
 Error handling for API requests
-
-
-
-Nice to haves:
 
 Use Current Location
 
