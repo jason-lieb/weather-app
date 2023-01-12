@@ -194,7 +194,6 @@ function chooseWeatherIcon(description) {
 
 // Handles all conditions that need to be considered when adding a new city to history
 function addNewCityToHistory(city) {
-  // if (history === null || history === undefined) history = [];
   // Check if city is already in history
   for (let i = 0; i < history.length; i++) {
     if (history[i] === city) {
@@ -225,10 +224,7 @@ function cityToDashes(city) {
 }
 
 function loadHistory() {
-  history = JSON.parse(localStorage.getItem('history'));
-  // if (history) {
-
-  // }
+  history = JSON.parse(localStorage.getItem('history')) || [];
   for (let i = history.length - 1; i >= 0; i--) {
     updateHistoryDOM(history[i]);
   }
